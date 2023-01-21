@@ -8,7 +8,7 @@ module.exports = function (app) {
   app.route("/api/check").post((req, res) => {
     if (!req.body.coordinate || !req.body.value)
       res.json({ error: "Required field(s) missing" });
-    else if (!/^[a-z][1-9]$/g.test(req.body.coordinate))
+    else if (!/^[a-zA-Z][1-9]$/g.test(req.body.coordinate))
       res.json({ error: "Invalid coordinate" });
     else if (!/^[1-9]$/g.test(req.body.value))
       res.json({ error: "Invalid value" });
@@ -35,5 +35,7 @@ module.exports = function (app) {
     }
   });
 
-  app.route("/api/solve").post((req, res) => {});
+  app.route("/api/solve").post((req, res) => {
+    res.json(solver.solve(req.body.puzzle));
+  });
 };

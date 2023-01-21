@@ -16,6 +16,7 @@ function convertToArrays(puzzleString) {
   }
   return array;
 }
+
 class SudokuSolver {
   validate(puzzleString) {
     let arr = puzzleString.split[""];
@@ -46,7 +47,44 @@ class SudokuSolver {
     ].includes(value);
   }
 
-  solve(puzzleString) {}
-}
+  solve(puzzleString) {
+    if (/[^0-9\.]/.test(puzzleString))
+      return { error: "Invalid characters in puzzle" };
+    let arr = puzzleString.split("");
+    if (arr.length != 81)
+      return { error: "Expected puzzle to be 81 characters long" };
+    let possible = [];
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] != ".") continue;
+      possible = this.findOptions(arr.join(""), i);
+      if (possible.length == 1) arr[i] = possible[0];
+      possible = [];
+    }
+    if (arr.join("") == puzzleString && !arr.includes("."))
+      return { solution: arr.join("") };
+    else if (arr.join("") == puzzleString) {
+      let i = arr.indexOf(".");
+      possible = this.findOptions(arr.join(""), i);
+      if (possible.length != 0) arr[i] = possible[0];
+      else return { error: "Puzzle cannot be solved" };
+      return this.solve(arr.join(""));
+    } else return this.solve(arr.join(""));
+  }
 
+  findOptions(puzzleString, i) {
+    let possible = [];
+    for (let j = 1; j < 10; j++) {
+      let row = (i - (i % 9)) / 9 + 1;
+      row = String.fromCharCode(96 + row);
+      let col = (i % 9) + 1;
+      if (
+        !this.checkRowPlacement(puzzleString, row, col, j.toString()) &&
+        !this.checkColPlacement(puzzleString, row, col, j.toString()) &&
+        !this.checkRegionPlacement(puzzleString, row, col, j.toString())
+      )
+        possible.push(j);
+    }
+    return possible;
+  }
+}
 module.exports = SudokuSolver;
