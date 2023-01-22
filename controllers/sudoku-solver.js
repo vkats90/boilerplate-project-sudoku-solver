@@ -31,20 +31,27 @@ class SudokuSolver {
   checkRowPlacement(puzzleString, row, column, value) {
     row = row.toLowerCase().charCodeAt(0) - 97;
     column--;
-    return convertToArrays(puzzleString).row[row].includes(value);
+    let arr = convertToArrays(puzzleString).row[row];
+    arr[column] = ".";
+    return arr.includes(value);
   }
 
   checkColPlacement(puzzleString, row, column, value) {
     row = row.toLowerCase().charCodeAt(0) - 97;
     column--;
-    return convertToArrays(puzzleString).col[column].includes(value);
+    let arr = convertToArrays(puzzleString).col[column];
+    arr[row] = ".";
+    return arr.includes(value);
   }
 
   checkRegionPlacement(puzzleString, row, column, value) {
     row = row.toLowerCase().charCodeAt(0) - 97 + 1;
-    return convertToArrays(puzzleString).region[
-      Math.floor((row - 1) / 3) * 3 + Math.floor((column - 1) / 3)
-    ].includes(value);
+    let arr =
+      convertToArrays(puzzleString).region[
+        Math.floor((row - 1) / 3) * 3 + Math.floor((column - 1) / 3)
+      ];
+    arr[((row % 3 || 3) - 1) * 3 + (column % 3 || 3) - 1] = ".";
+    return arr.includes(value);
   }
 
   solve(puzzleString) {

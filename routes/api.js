@@ -6,11 +6,11 @@ module.exports = function (app) {
   let solver = new SudokuSolver();
 
   app.route("/api/check").post((req, res) => {
-    if (!req.body.coordinate || !req.body.value)
+    if (!req.body.coordinate || !req.body.value || !req.body.puzzle)
       res.json({ error: "Required field(s) missing" });
     else if (/[^0-9\.]/.test(req.body.puzzle))
       res.json({ error: "Invalid characters in puzzle" });
-    else if (!/^[a-zA-Z][1-9]$/g.test(req.body.coordinate))
+    else if (!/^[a-iA-I][1-9]$/g.test(req.body.coordinate))
       res.json({ error: "Invalid coordinate" });
     else if (!/^[1-9]$/g.test(req.body.value))
       res.json({ error: "Invalid value" });
